@@ -1,0 +1,23 @@
+package com.example.demo.client;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.Socket;
+
+public class Client {
+
+	    public static void main(String[] args) {
+	    	try (Socket socket = new Socket("localhost", 12345)) {
+	            OutputStream outputStream = socket.getOutputStream();
+
+	            String message = "¡Hola, servidor!\n"; // Agregamos un salto de línea
+	            outputStream.write(message.getBytes());
+	            outputStream.flush(); // Aseguramos que los datos se envíen
+
+	            outputStream.close();
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }
+	    }
+	
+}

@@ -1,0 +1,31 @@
+package com.example.demo.server;
+
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.integration.annotation.ServiceActivator;
+import org.springframework.integration.ip.IpHeaders;
+import org.springframework.integration.ip.tcp.TcpInboundGateway;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.handler.annotation.Header;
+
+@Configuration
+public class TcpServerConfig {
+
+    @Bean
+    public TcpInboundGateway tcpInboundGateway() {
+        TcpInboundGateway gateway = new TcpInboundGateway();
+        gateway.setRequestChannelName("serverInputChannel");
+        return gateway;
+    }
+
+    @ServiceActivator(inputChannel = "serverInputChannel")
+    public void handleMessage(Message<String> message, @Header(IpHeaders.CONNECTION_ID) String connectionId) {
+        System.out.println("Received message: " + message.getPayload() + " from connection: " + connectionId);
+    }
+
+    public static void main(String[] args) {
+        new AnnotationConfigApplicationContext(TcpServerConfig.class);
+    }
+}
+

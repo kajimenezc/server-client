@@ -1,0 +1,61 @@
+package com.example.demo.server;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import javax.annotation.PostConstruct;
+
+import org.springframework.stereotype.Component;
+
+//@Component
+public class server {
+
+//	@PostConstruct
+//    public void startServer() {
+//        ExecutorService executor = Executors.newCachedThreadPool(); // Usar hilos de manera dinámica
+//
+//        try {
+//            ServerSocket serverSocket = new ServerSocket(12345); // Puerto TCP deseado
+//            System.out.println("Servidor TCP iniciado en el puerto 12345");
+//
+//            while (true) {
+//                Socket clientSocket = serverSocket.accept();
+//                System.out.println("Cliente conectado desde: " + clientSocket.getInetAddress());
+//
+//                // Manejar la conexión del cliente en un nuevo hilo
+//                executor.execute(new ClientHandler(clientSocket));
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    private static class ClientHandler implements Runnable {
+//        private final Socket clientSocket;
+//
+//        public ClientHandler(Socket clientSocket) {
+//            this.clientSocket = clientSocket;
+//        }
+//
+//        @Override
+//        public void run() {
+//            try {
+//                // Lógica para manejar la conexión con el cliente
+//                // Por ejemplo, leer y escribir datos en el flujo de entrada/salida
+//                // ...
+//                
+//                // Cierre adecuado de la conexión
+//                clientSocket.close();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
+	
+}

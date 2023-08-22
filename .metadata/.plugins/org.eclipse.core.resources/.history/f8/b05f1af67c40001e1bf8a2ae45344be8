@@ -1,0 +1,48 @@
+package com.example.demo.server;
+
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+@Component
+public class server {
+
+	    @PostConstruct
+	    public void startServer() {
+	        ExecutorService executor = Executors.newCachedThreadPool(); // Usar hilos de manera dinámica
+
+	        try {
+	            ServerSocket serverSocket = new ServerSocket(12345); // Puerto TCP deseado
+	            System.out.println("Servidor TCP iniciado en el puerto 12345");
+
+	            while (true) {
+	                Socket clientSocket = serverSocket.accept();
+	                System.out.println("Cliente conectado de…
+	import java.io.IOException;
+	import java.io.OutputStream;
+	import java.net.Socket;
+
+	public class TcpClient {
+
+	    public static void main(String[] args) {
+	        try {
+	            Socket socket = new Socket("localhost", 12345); // IP y puerto del servidor
+	            OutputStream outputStream = socket.getOutputStream();
+
+	            String message = "¡Hola, servidor!";
+	            outputStream.write(message.getBytes());
+
+	            outputStream.close();
+	            socket.close();
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }
+	    }
+	}
+	
+}

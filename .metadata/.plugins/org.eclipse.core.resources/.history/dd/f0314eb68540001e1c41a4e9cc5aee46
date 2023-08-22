@@ -1,0 +1,31 @@
+package com.example.demo.client;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+
+public class Client {
+
+    public static void main(String[] args) {
+        String serverAddress = "127.0.0.1";
+        int serverPort = 8082;
+
+        try (
+            Socket socket = new Socket(serverAddress, serverPort);
+            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))
+        ) {
+            // Enviar mensaje al servidor
+            out.println("Hello, Server!");
+
+            // Leer la respuesta del servidor
+            String response = in.readLine();
+            System.out.println("Server response: " + response);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+	
+}

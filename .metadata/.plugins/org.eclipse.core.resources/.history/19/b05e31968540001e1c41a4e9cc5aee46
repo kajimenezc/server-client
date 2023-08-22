@@ -1,0 +1,48 @@
+package com.example.demo.client;
+
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.integration.annotation.Gateway;
+import org.springframework.integration.annotation.MessagingGateway;
+import org.springframework.integration.channel.DirectChannel;
+import org.springframework.integration.config.EnableIntegration;
+import org.springframework.integration.ip.tcp.TcpOutboundGateway;
+import org.springframework.messaging.MessageChannel;
+
+@Configuration
+@EnableIntegration
+public class TcpClientConfig {
+
+    @Bean
+    public MessageChannel clientOutputChannel() {
+        return new DirectChannel();
+    }
+
+    @Bean
+    public TcpOutboundGateway tcpOutboundGateway() {
+        TcpOutboundGateway gateway = new TcpOutboundGateway();
+        gateway.setConnectionFactory(tcpClientConnectionFactory());
+        gateway.setOutputChannel(clientOutputChannel());
+        return gateway;
+    }
+
+    @Bean
+    public TcpClientConnectionFactory tcpClientConnectionFactory() {
+        return new TcpNetClientConnectionFactory("localhost", 9876); // Reemplaza con la dirección y puerto del servidor
+    }
+
+    @MessagingGateway(defaultRequestChannel = "clientOutputChannel")
+    public interface TcpClientGateway {
+        @Gateway
+        void sendToTcp(String message);
+    }
+
+    public static void main(String[] args) {
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(TcpClientConfig.class);
+        TcpClientGateway clientGateway = context.getBean(TcpClientGateway.class);
+        clientGateway.sendToTcp("Hello, server!");
+        context.close();
+    }
+}
+

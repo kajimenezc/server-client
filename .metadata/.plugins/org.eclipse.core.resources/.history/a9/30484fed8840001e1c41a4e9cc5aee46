@@ -1,0 +1,37 @@
+package com.example.demo.server;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+public class TCPServer {
+
+	private static final int PORT = 9876;
+    private static ExecutorService executorService = Executors.newCachedThreadPool();
+    private static List<PrintWriter> clientWriters = new ArrayList<>();
+
+    public static void main(String[] args) {
+        try (ServerSocket serverSocket = new ServerSocket(PORT)) {
+            System.out.println("Server is listening on port " + PORT);
+
+            while (true) {
+                Socket clientSocket = serverSocket.accept();
+                System.out.println("Client connected: " + clientSocket.getInetAddress().getHostAddress());
+
+                PrintWriter clientWriter = new PrintWriter(clientSocket.getOutputStream(), true);
+                clientWriters.add(clientWriter);
+                
+                // Start a new thread to handle the client
+                executorService.submit(new ClientHandler(clientSocket));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+	
+}

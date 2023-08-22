@@ -1,0 +1,62 @@
+package com.example.demo.server;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import org.springframework.stereotype.Component;
+
+public class server {
+
+	public static void main(String[] args) {
+        ExecutorService executor = Executors.newCachedThreadPool();
+
+        try (ServerSocket serverSocket = new ServerSocket(12345)) {
+            System.out.println("Servidor TCP iniciado en el puerto 12345");
+
+            while (true) {
+                Socket clientSocket = serverSocket.accept();
+                System.out.println("Cliente conectado desde: " + clientSocket.getInetAddress());
+
+                executor.execute(new ClientHandler(clientSocket));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static class ClientHandler implements Runnable {
+        private final Socket clientSocket;
+
+        public ClientHandler(Socket clientSocket) {
+            this.clientSocket = clientSocket;
+        }
+
+        @Override
+        public void run() {
+            try {
+                InputStream inputStream = clientSocket.getInputStream();
+                InputStreamReader reader = new InputStreamReader(inputStream);
+                BufferedReader bufferedReader = new BufferedReader(reader);
+
+                String clientMessage;
+                while ((clientMessage = bufferedReader.readLine()) != null) {
+                    System.out.println("Mensaje del cliente: " + clientMessage);
+                }
+
+                bufferedReader.close();
+                reader.close();
+                inputStream.close();
+                clientSocket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+	
+}

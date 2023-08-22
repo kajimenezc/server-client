@@ -1,0 +1,7 @@
+INDEX VERSION 1.134+C:\Users\Kevin\Downloads\sts-4.19.1.RELEASE\prpojects\.metadata\.plugins\org.eclipse.jdt.core
+3547595765.index
+1865797976.index
+841827661.index
+2461411560.index
+2127088249.index
+164625135.index
