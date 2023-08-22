@@ -9,17 +9,23 @@ import java.net.Socket;
 public class ClientHandler implements Runnable{
 
 	private Socket clientSocket;
+	private PrintWriter clientWriter;
     private PrintWriter out;
     private BufferedReader in;
+    private int clientIndex;
+    private String clientAddress;
 
-    public ClientHandler(Socket clientSocket) {
+    public ClientHandler(Socket clientSocket, PrintWriter clientWriter) {
         this.clientSocket = clientSocket;
+        this.clientWriter = clientWriter;
+        this.clientAddress = clientSocket.getInetAddress().getHostAddress();
+        
         try {
-            out = new PrintWriter(clientSocket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
         } catch (IOException e) {
             e.printStackTrace();
         }
+      
     }
 
     @Override
@@ -31,12 +37,15 @@ public class ClientHandler implements Runnable{
             String inputLine;
             while ((inputLine = in.readLine()) != null) {
             	System.out.println("Received from " + clientAddress + ": " + inputLine);
-                out.println("Server received: " + inputLine);
+                //out.println("Server received: " + inputLine);
+                
+            	 // Reenvía el mensaje a todos los clientes conectados
+                TCPServer.sendMessageToAllClients("Client " + clientAddress + ": " + inputLine);
+            	
              }
 
             System.out.println("Client disconnected: " + clientAddress);
-            out.close();
-            in.close();
+            TCPServer.clientWriters.remove(clientWriter); // Remueve el clientWriter usando el índice
             clientSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
